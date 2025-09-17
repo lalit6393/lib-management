@@ -1,0 +1,20 @@
+.pagination {
+  list-style-type: none;
+  padding-left: 0;       
+  margin: 0;           
+  display: flex;    
+  gap: 0.5rem; 
+}
+
+.page-item {
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  border: 0;
+  border-radius: 0.375rem;
+  background-color: white;
+}
+
+.page-item.active {
+  font-weight: 600;
+  background-color: #f9fafb;
+}
