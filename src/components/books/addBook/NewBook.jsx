@@ -1,25 +1,17 @@
-import { useEffect, useReducer, useState } from "react"
-import { actionType, reducer } from "../../../reducers/bookReducer";
+import { useEffect, useState } from "react"
+import { useDispatch, useSelector } from "react-redux";
+import { authorChange, errorsChange, idChange, nameChange, resetForm, touchesChange } from "../../../redux/slices/bookSlice";
 
 
 const NewBook = () => {
 
     const [isPending, setIsPending] = useState(false);
     const [isDisabled, setIsDisabled] = useState(true);
-
     const [books, setBooks] = useState([]);
 
-    const initialState = {
-        id: null,
-        name: '',
-        author: '',
-        errors: {},
-        touched: {}
-    }
-
-    const [formState, dispatch] = useReducer(reducer, initialState);
-
-
+    const formState = useSelector((state) => state.books);
+    const dispatch = useDispatch();
+    
     const Validate = () => {
 
         const errors = {};
@@ -36,7 +28,7 @@ const NewBook = () => {
 
         const isValid = Object.keys(errors).length === 0;
 
-        dispatch({ type: actionType.errorsChange, errors })
+        dispatch(errorsChange({ errors: errors }))
 
         setIsDisabled(!isValid);
 
@@ -50,14 +42,14 @@ const NewBook = () => {
         setBooks(prev => ([...prev, { id: formState.id, name: formState.name, author: formState.author }]));
 
         setIsPending(false);
-        dispatch({type: actionType.resetForm, value:initialState});
+        dispatch(resetForm());
     }
 
     useEffect(() => {
         const timer = setTimeout(() => {
             Validate();
         }, 500);
-        
+
         return () => clearTimeout(timer);
     }, [formState.id, formState.name, formState.author])
 
@@ -74,8 +66,8 @@ const NewBook = () => {
                         id='bookId'
                         className='form-control'
                         value={formState.id ?? ''}
-                        onChange={(e) => dispatch({ type: actionType.idChange, value: e.target.value })}
-                        onBlur={(e) => dispatch({ type: actionType.touchesChange, name: e.target.name })}
+                        onChange={(e) => dispatch(idChange({ value: e.target.value }))}
+                        onBlur={(e) => dispatch(touchesChange({ name: e.target.name }))}
                         required
                     />
                     {
@@ -91,8 +83,8 @@ const NewBook = () => {
                         id='bookName'
                         className='form-control'
                         value={formState.name}
-                        onChange={(e) => dispatch({ type: actionType.nameChange, value: e.target.value })}
-                        onBlur={(e) => dispatch({ type: actionType.touchesChange, name: e.target.name })}
+                        onChange={(e) => dispatch(nameChange({ value: e.target.value }))}
+                        onBlur={(e) => dispatch(touchesChange({ name: e.target.name }))}
                         required
                     />
                     {
@@ -108,8 +100,8 @@ const NewBook = () => {
                         id='bookAuthor'
                         className='form-control'
                         value={formState.author}
-                        onChange={(e) => dispatch({ type: actionType.authorChange, value: e.target.value })}
-                        onBlur={(e) => dispatch({ type: actionType.touchesChange, name: e.target.name })}
+                        onChange={(e) => dispatch(authorChange({ value: e.target.value }))}
+                        onBlur={(e) => dispatch(touchesChange({ name: e.target.name }))}
                         required
                     />
                     {
@@ -120,6 +112,8 @@ const NewBook = () => {
                     {isPending ? 'Submitting...' : 'Submit'}
                 </button>
             </form>
+
+            {/* rendering the booklist added */}
             <div>
                 <table className="table table-bordered table-striped text-center">
                     <thead>
