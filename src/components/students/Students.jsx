@@ -1,25 +1,15 @@
 import { useState } from 'react';
 import data from '../../assets/data/studentsList.json';
 import Details from './details/Details';
-import ReactPaginate from 'react-paginate';
+import Pagination from '../pagination/Pagination';
+import usePagination from '../../hooks/usePagination';
 
 const Students = () => {
 
     const [selectedStudent, setSelectedStudent] = useState(null);
-
-    const [itemOffset, setItemOffset] = useState(0);
     const [open, setOpen] = useState(true);
 
-    const itemsPerPage = 10;
-    const endOffset = itemOffset + itemsPerPage;
-    const currentItems = data?.slice(itemOffset, endOffset);
-    const pageCount = Math.ceil(data.length / itemsPerPage);
-
-    //page change
-    const handlePageClick = (event) => {
-        const newOffset = (event.selected * itemsPerPage) % data.length;
-        setItemOffset(newOffset);
-    };
+    const { currentItems, pageCount, handlePageClick} = usePagination(data);
 
     return (
         <div className="col">
@@ -66,26 +56,7 @@ const Students = () => {
                             }
                         </tbody>
                     </table>
-                    <ReactPaginate
-                        breakLabel="..."
-                        nextLabel="Next"
-                        previousLabel="Previous"
-                        onPageChange={handlePageClick}
-                        pageRangeDisplayed={0}
-                        pageCount={pageCount}
-                        renderOnZeroPageCount={null}
-                        marginPagesDisplayed={1}
-                        containerClassName="pagination justify-content-center"  // <ul>
-                        pageClassName="page-item"                               // <li>
-                        pageLinkClassName="page-link"                           // <a>
-                        activeClassName="active"     
-                        previousClassName="page-item"
-                        previousLinkClassName="page-link"
-                        nextClassName="page-item"
-                        nextLinkClassName="page-link"
-                        breakClassName="page-item"
-                        breakLinkClassName="page-link"
-                    />
+                    <Pagination pageCount={pageCount} handlePageClick={handlePageClick} />
                     <Details student={selectedStudent} />
                 </>}
         </div>
