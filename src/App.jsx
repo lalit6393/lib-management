@@ -4,6 +4,8 @@ import Books from './components/books/Books'
 import Students from './components/students/Students'
 import Home from './components/home/Home'
 import Details from './components/students/details/Details'
+import NotFound from './components/NotFound'
+import NewBook from './components/books/addBook/NewBook'
 
 function App() {
   return (
@@ -11,11 +13,12 @@ function App() {
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/books' element={<Books />} />
+        <Route path='/books/new' element={<NewBook />} />
         <Route path='/all-students' element={<Navigate to="/students" replace />} />
         <Route path='/students' element={<Students />} >
           <Route path='details/:id' element={<Details />} />
         </Route>
-        <Route path='*' element={<p>Error 404, Page Not Found!</p>} />
+        <Route path='*' element={<NotFound/>} />
       </Routes>
     </div>
   )
