@@ -2,6 +2,8 @@ import { useState } from 'react';
 import data from '../../assets/data/booksList.json';
 import Pagination from '../pagination/Pagination';
 import usePagination from '../../hooks/usePagination';
+import { booksTableFields } from '../../config/tables';
+import Table from '../table/Table';
 
 const Books = () => {
 
@@ -22,34 +24,7 @@ const Books = () => {
             {
                 open &&
                 <>
-                    <table className="table table-bordered table-striped text-center">
-                        <thead>
-                            <tr>
-                                <th>Book ID</th>
-                                <th>Book Name</th>
-                                <th>Book Author</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {data.length === 0 ?
-                                <tr>
-                                    <td>No data found!</td>
-                                    <td>No data found!</td>
-                                    <td>No data found!</td>
-                                </tr>
-                                :
-                                <>
-                                    {currentItems?.map((book) => (
-                                        <tr key={book.id}>
-                                            <td className='text-center'>{book.id}</td>
-                                            <td className='text-start'>{book.title}</td>
-                                            <td className='text-start'>{book.author}</td>
-                                        </tr>
-                                    ))}
-                                </>
-                            }
-                        </tbody>
-                    </table>
+                    <Table tableFields={booksTableFields} data={currentItems}/>
                     <Pagination pageCount={pageCount} handlePageClick={handlePageClick}/>
                 </>}
         </div>

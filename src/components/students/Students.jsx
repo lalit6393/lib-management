@@ -3,13 +3,15 @@ import data from '../../assets/data/studentsList.json';
 import Details from './details/Details';
 import Pagination from '../pagination/Pagination';
 import usePagination from '../../hooks/usePagination';
+import { studentsTableFields } from '../../config/tables';
+import Table from '../table/Table';
 
 const Students = () => {
 
     const [selectedStudent, setSelectedStudent] = useState(null);
     const [open, setOpen] = useState(true);
 
-    const { currentItems, pageCount, handlePageClick} = usePagination(data);
+    const { currentItems, pageCount, handlePageClick } = usePagination(data);
 
     return (
         <div className="col">
@@ -24,38 +26,7 @@ const Students = () => {
             {
                 open &&
                 <>
-                    <table className="table table-bordered table-striped text-center">
-                        <thead>
-                            <tr>
-                                <th>Student ID</th>
-                                <th>Student Name</th>
-                                <th>Student Age</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {data.length === 0 ?
-                                <tr>
-                                    <td>No data found!</td>
-                                    <td>No data found!</td>
-                                    <td>No data found!</td>
-                                </tr>
-                                :
-                                <>
-                                    {currentItems?.map((student) => (
-                                        <tr
-                                            key={student.id}
-                                            onClick={() => setSelectedStudent(student)}
-                                            role='button'
-                                        >
-                                            <td>{student.id}</td>
-                                            <td>{student.title}</td>
-                                            <td>{student.age}</td>
-                                        </tr>
-                                    ))}
-                                </>
-                            }
-                        </tbody>
-                    </table>
+                    <Table tableFields={studentsTableFields} data={currentItems} onRowClick={setSelectedStudent} />
                     <Pagination pageCount={pageCount} handlePageClick={handlePageClick} />
                     <Details student={selectedStudent} />
                 </>}
