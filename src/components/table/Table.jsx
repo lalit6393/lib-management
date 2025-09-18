@@ -1,6 +1,7 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
-const Table = ({ tableFields = [], data = [], onRowClick = null}) => {
+const Table = ({ tableFields = [], data = [], onRowClick = null }) => {
     return (
         <>
             <table className="table table-bordered table-striped text-center">
@@ -22,10 +23,17 @@ const Table = ({ tableFields = [], data = [], onRowClick = null}) => {
                                 <tr
                                     key={row?.id || idx}
                                     onClick={onRowClick ? () => onRowClick(row) : undefined}
-                                    role='button'
+                                    role={onRowClick ? "button" : undefined}
                                 >
                                     {
-                                        tableFields.map((column, idx) => <td key={idx}>{row[column?.fieldName] || `Column ${idx + 1}`}</td>)
+                                        tableFields.map((column, idx) => {
+                                            if (column?.fieldType && column.fieldType === 'link')
+                                                return <td key={idx}>
+                                                    <Link className='link-primary' to={`${column?.base}/${row[column?.param]}`}>{column?.fieldName || 'View'}</Link>
+                                                </td>
+                                            else
+                                                return <td key={idx}>{row[column?.fieldName] || `Column ${idx + 1}`}</td>
+                                        })
                                     }
                                 </tr>
                             ))}

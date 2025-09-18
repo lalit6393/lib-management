@@ -1,14 +1,13 @@
 import { useState } from 'react';
 import data from '../../assets/data/studentsList.json';
-import Details from './details/Details';
 import Pagination from '../pagination/Pagination';
 import usePagination from '../../hooks/usePagination';
 import { studentsTableFields } from '../../config/tables';
 import Table from '../table/Table';
+import { Outlet } from 'react-router-dom';
 
 const Students = () => {
 
-    const [selectedStudent, setSelectedStudent] = useState(null);
     const [open, setOpen] = useState(true);
 
     const { currentItems, pageCount, handlePageClick } = usePagination(data);
@@ -26,9 +25,9 @@ const Students = () => {
             {
                 open &&
                 <>
-                    <Table tableFields={studentsTableFields} data={currentItems} onRowClick={setSelectedStudent} />
+                    <Table tableFields={studentsTableFields} data={currentItems}/>
                     <Pagination pageCount={pageCount} handlePageClick={handlePageClick} />
-                    <Details student={selectedStudent} />
+                    <Outlet/>
                 </>}
         </div>
     );

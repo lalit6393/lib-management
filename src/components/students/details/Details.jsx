@@ -1,6 +1,13 @@
-import React from 'react'
+import { useParams } from "react-router-dom";
+import data from '../../../assets/data/studentsList.json';
 
-const Details = ({ student }) => {
+const Details = () => {
+
+    const { id } = useParams();
+    const student = data?.find((item) => item.id == id);
+
+    console.log(id);
+
 
     if (!student) return;
 
