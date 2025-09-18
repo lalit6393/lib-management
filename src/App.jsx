@@ -18,7 +18,7 @@ function App() {
         <Route path='/students' element={<Students />} >
           <Route path='details/:id' element={<Details />} />
         </Route>
-        <Route path='*' element={<NotFound/>} />
+        <Route path='*' element={<NotFound />} />
       </Routes>
     </div>
   )

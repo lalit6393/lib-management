@@ -1,23 +1,22 @@
 import { useEffect, useReducer, useState } from "react"
 import { actionType, reducer } from "../../../reducers/bookReducer";
+import { useDispatch, useSelector } from "react-redux";
 
 
 const NewBook = () => {
 
     const [isPending, setIsPending] = useState(false);
     const [isDisabled, setIsDisabled] = useState(true);
+    const dispatch = useDispatch();
+    const formState = useSelector((state) => ({
+        id: state.id,
+        name: state.name,
+        author: state.author,
+        errors: state.errors,
+        touched: state.touched,
+    }));
 
     const [books, setBooks] = useState([]);
-
-    const initialState = {
-        id: null,
-        name: '',
-        author: '',
-        errors: {},
-        touched: {}
-    }
-
-    const [formState, dispatch] = useReducer(reducer, initialState);
 
 
     const Validate = () => {
@@ -50,14 +49,14 @@ const NewBook = () => {
         setBooks(prev => ([...prev, { id: formState.id, name: formState.name, author: formState.author }]));
 
         setIsPending(false);
-        dispatch({type: actionType.resetForm, value:initialState});
+        dispatch({ type: actionType.resetForm});
     }
 
     useEffect(() => {
         const timer = setTimeout(() => {
             Validate();
         }, 500);
-        
+
         return () => clearTimeout(timer);
     }, [formState.id, formState.name, formState.author])
 

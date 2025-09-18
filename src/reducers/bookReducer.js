@@ -7,8 +7,16 @@ export const actionType = {
     resetForm: 'Reset_form'
 }
 
+export const initialState = {
+    id: null,
+    name: '',
+    author: '',
+    errors: {},
+    touched: {}
+}
 
-export const reducer = (state, action) => {
+
+export const reducer = (state = initialState, action) => {
     switch (action.type) {
         case actionType.idChange: {
             return {
@@ -44,8 +52,10 @@ export const reducer = (state, action) => {
             }
         }
         case actionType.resetForm: {
-            return action.value
+            return initialState
         }
+        default:
+            return state;
 
     }
 }
