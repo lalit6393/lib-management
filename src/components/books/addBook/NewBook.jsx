@@ -1,4 +1,6 @@
-import { useActionState, useEffect, useState } from "react"
+import { useEffect, useReducer, useState } from "react"
+import { actionType, reducer } from "../../../reducers/bookReducer";
+
 
 const NewBook = () => {
 
@@ -15,24 +17,7 @@ const NewBook = () => {
         touched: {}
     }
 
-    const [formState, setFormState] = useState(initialState);
-
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormState(prev => ({ ...prev, [name]: value }));
-    }
-
-    const handleBlur = (e) => {
-        const { name } = e.target;
-
-        setFormState((prev) => ({
-            ...prev,
-            touched: {
-                ...prev.touched,
-                [name]: true
-            }
-        }));
-    };
+    const [formState, dispatch] = useReducer(reducer, initialState);
 
 
     const Validate = () => {
@@ -51,10 +36,7 @@ const NewBook = () => {
 
         const isValid = Object.keys(errors).length === 0;
 
-        setFormState(prev => ({
-            ...prev,
-            errors
-        }));
+        dispatch({ type: actionType.errorsChange, errors })
 
         setIsDisabled(!isValid);
 
@@ -68,11 +50,15 @@ const NewBook = () => {
         setBooks(prev => ([...prev, { id: formState.id, name: formState.name, author: formState.author }]));
 
         setIsPending(false);
-        setFormState(initialState);
+        dispatch({type: actionType.resetForm, value:initialState});
     }
 
     useEffect(() => {
-        Validate();
+        const timer = setTimeout(() => {
+            Validate();
+        }, 500);
+        
+        return () => clearTimeout(timer);
     }, [formState.id, formState.name, formState.author])
 
     return (
@@ -88,8 +74,8 @@ const NewBook = () => {
                         id='bookId'
                         className='form-control'
                         value={formState.id ?? ''}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
+                        onChange={(e) => dispatch({ type: actionType.idChange, value: e.target.value })}
+                        onBlur={(e) => dispatch({ type: actionType.touchesChange, name: e.target.name })}
                         required
                     />
                     {
@@ -105,8 +91,8 @@ const NewBook = () => {
                         id='bookName'
                         className='form-control'
                         value={formState.name}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
+                        onChange={(e) => dispatch({ type: actionType.nameChange, value: e.target.value })}
+                        onBlur={(e) => dispatch({ type: actionType.touchesChange, name: e.target.name })}
                         required
                     />
                     {
@@ -122,8 +108,8 @@ const NewBook = () => {
                         id='bookAuthor'
                         className='form-control'
                         value={formState.author}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
+                        onChange={(e) => dispatch({ type: actionType.authorChange, value: e.target.value })}
+                        onBlur={(e) => dispatch({ type: actionType.touchesChange, name: e.target.name })}
                         required
                     />
                     {
@@ -131,38 +117,38 @@ const NewBook = () => {
                     }
                 </div>
                 <button type='submit' className='btn btn-primary' disabled={isPending || isDisabled}>
-                    {isPending ?  'Submitting...':'Submit'}
+                    {isPending ? 'Submitting...' : 'Submit'}
                 </button>
             </form>
             <div>
                 <table className="table table-bordered table-striped text-center">
-                <thead>
-                    <tr>
-                        <th>Book Id</th>
-                        <th>Book Name</th>
-                        <th>Book Author</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {books.length === 0 ?
+                    <thead>
                         <tr>
-                            <td colSpan={3}>No book found!</td>
+                            <th>Book Id</th>
+                            <th>Book Name</th>
+                            <th>Book Author</th>
                         </tr>
-                        :
-                        <>
-                            {books?.map((row, idx) => (
-                                <tr
-                                    key={row?.id || idx}
-                                >
-                                    <td>{row?.id ?? 'no id'}</td>
-                                    <td>{row?.name ?? 'no name'}</td>
-                                    <td>{row?.author ?? 'no auhtor'}</td>
-                                </tr>
-                            ))}
-                        </>
-                    }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {books.length === 0 ?
+                            <tr>
+                                <td colSpan={3}>No book found!</td>
+                            </tr>
+                            :
+                            <>
+                                {books?.map((row, idx) => (
+                                    <tr
+                                        key={row?.id || idx}
+                                    >
+                                        <td>{row?.id ?? 'no id'}</td>
+                                        <td>{row?.name ?? 'no name'}</td>
+                                        <td>{row?.author ?? 'no auhtor'}</td>
+                                    </tr>
+                                ))}
+                            </>
+                        }
+                    </tbody>
+                </table>
             </div>
         </div>
     )
