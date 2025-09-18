@@ -66,7 +66,9 @@ const NewBook = () => {
         setIsPending(true);
 
         setBooks(prev => ([...prev, { id: formState.id, name: formState.name, author: formState.author }]));
+
         setIsPending(false);
+        setFormState(initialState);
     }
 
     useEffect(() => {
