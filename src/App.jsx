@@ -6,6 +6,7 @@ import Home from './components/home/Home'
 import Details from './components/students/details/Details'
 import NotFound from './components/NotFound'
 import NewBook from './components/books/addBook/NewBook'
+import Users from './components/users/Users'
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path='/students' element={<Students />} >
           <Route path='details/:id' element={<Details />} />
         </Route>
+        <Route path='/users' element={<Users/>}/>
         <Route path='*' element={<NotFound/>} />
       </Routes>
     </div>
